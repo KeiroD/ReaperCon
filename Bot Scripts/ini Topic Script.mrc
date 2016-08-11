@@ -13,23 +13,23 @@ on $*:TEXT:/^\.(update|topic|divider|owner|verb|status|static|prepend)( |$)/Si:#
     }
     return
   }
-  
+
   if (%item == prepend) {
-    if ($2 != on) && ($2 != off) ($2 != custom) {
-	  msg $chan Please select whether you'd like to have the Prepend "Topic:" on or off, !prepend on/off/custom.
-	}
-	elseif ($2 == on) {
-	  writeini -n Topics.ini $chan %item Topic:
-	}
-	elseif ($2 == off) {
-	  remini Topics.ini $chan %item
-	}
-	elseif ($2 == custom) {
-	  if (!$3) { msg $chan Please enter a custom Prepend you would like to use.. !prepend custom <custom prepend>.
-	  else {
-	    writeini -n Topics.ini $chan %item $3-
+    if (!$istok(on|off|custom,$2,124)) {
+      msg $chan Please select whether you'd like to have the Prepend "Topic:" on or off, !prepend on/off/custom.
+    }
+    elseif ($2 == on) {
+      writeini -n Topics.ini $chan %item Topic:
+    }
+    elseif ($2 == off) {
+      remini Topics.ini $chan %item
+    }
+    elseif ($2 == custom) {
+      if (!$3) { msg $chan Please enter a custom Prepend you would like to use.. !prepend custom <custom prepend>. }
+      else {
+        writeini -n Topics.ini $chan %item $3-
       }
-	}
+    }
   }
 
   ; The remaining commands update one of the items in topics.ini
@@ -49,7 +49,7 @@ on $*:TEXT:/^\.(update|topic|divider|owner|verb|status|static|prepend)( |$)/Si:#
   }
 
   ; Perform the topic command
-  %cmd $topini(topic) $topini(divider) $topini(owner) $topini(verb) $topini(status) $topini(divider) $topini(static)
+  %cmd $topini(prepend) $topini(topic) $topini(divider) $topini(owner) $topini(verb) $topini(status) $topini(divider) $topini(static)
 }
 
 alias -l topini {
